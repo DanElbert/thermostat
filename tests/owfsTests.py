@@ -20,4 +20,21 @@ class owSensorTestFixture(unittest.TestCase):
         self.assertEqual(24.432, tempReading)
         
     def testRelaySensor(self):
-        pass
+        file = open("/home/dan/development/thermostat/tests/fakeOwfsMount/01.1234567890/PIO", "w")
+        file.write("0")
+        file.close()
+        relay = Sensors.RelaySensor(self.owSettings, "/home/dan/development/thermostat/tests/fakeOwfsMount/01.1234567890")
+        self.assertEqual(False, relay.isOpen())
+        
+        file = open("/home/dan/development/thermostat/tests/fakeOwfsMount/01.1234567890/PIO", "w")
+        file.write("1")
+        file.close()
+        
+        self.assertEqual(True, relay.isOpen())
+        relay.close()
+        self.assertEqual(False, relay.isOpen())
+        relay.close()
+        self.assertEqual(False, relay.isOpen())
+        
+        relay.open()
+        self.assertEqual(True, relay.isOpen())

@@ -30,3 +30,17 @@ class TemperatureSensor(OwSensor):
     
     def getTemperature(self):
         return float(self.__getattr__("temperature"))
+    
+class RelaySensor(OwSensor):
+    
+    def isOpen(self):
+        pio = self.PIO
+        return pio == "1"
+    
+    def close(self):
+        if self.isOpen():
+            self.PIO = "0"
+            
+    def open(self):
+        if not self.isOpen():
+            self.PIO = "1"
