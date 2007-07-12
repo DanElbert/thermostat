@@ -5,6 +5,7 @@ class OwSettings:
         self.owfsRoot = ""
 
 class OwSensor:
+    
     def __init__(self, owfsSettings, sensorPath):
         #if owfsSettings.owfsRoot == "":
         #    raise RuntimeError, "You must set OWFS_ROOT to the owfs mount point."
@@ -14,7 +15,7 @@ class OwSensor:
             sensorPath = sensorPath + "/"
         if not os.path.exists(sensorPath + "address"):
             raise RuntimeError, "Path does not seem to point to a valid sensor."
-        self.sensorPath = sensorPath
+        self.__dict__["sensorPath"] = sensorPath
     
     def __getattr__(self, name):
         if os.path.exists(self.sensorPath + name):
@@ -25,6 +26,16 @@ class OwSensor:
                 attr.close()
             return value
         raise AttributeError, name
+    
+    def __setattr__(self, name, value):
+        if os.path.exists(self.sensorPath + name):
+            attr = open(self.sensorPath + name, "w")
+            try:
+                attr.write(value)
+            finally:
+                attr.close()
+        else:
+            self.__dict__[name] = value
     
 class TemperatureSensor(OwSensor):
     

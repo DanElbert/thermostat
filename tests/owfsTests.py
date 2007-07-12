@@ -36,5 +36,10 @@ class owSensorTestFixture(unittest.TestCase):
         relay.close()
         self.assertEqual(False, relay.isOpen())
         
+        file = open("/home/dan/development/thermostat/tests/fakeOwfsMount/01.1234567890/PIO", "r")
+        currVal = file.read()
+        file.close()
+        self.assertEqual("0", currVal)
+        
         relay.open()
         self.assertEqual(True, relay.isOpen())
