@@ -16,10 +16,10 @@ class owSensorTestFixture(unittest.TestCase):
         
         # In the fake mount point, the uncached version of the sensor has 'FAKE!' as the address.
         # This asserts that changing the useCache attribute changes the internal path of the sensor.
-        sensor.useCache = True        
+        sensor.useCache = False        
         self.assertEqual("FAKE!", sensor.address)
         
-        sensor.useCache = False        
+        sensor.useCache = True
         self.assertEqual("011234567890ABFF", sensor.address)
         
     def testTempSensor(self):

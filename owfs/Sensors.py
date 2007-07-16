@@ -7,7 +7,7 @@ class OwSettings:
     owfsRoot: points at the rool of the owfs mount point
     useCache: whether to use the built-in owfs caching mechanism or not
     """
-    def __init__(self, owfsRoot, useCache = False):
+    def __init__(self, owfsRoot, useCache = True):
         if owfsRoot == "" or owfsRoot == None:
             raise RuntimeError, "owfsRoot can not be null or empty."
         
@@ -48,7 +48,7 @@ class OwSensor(object):
         
     def __getFullSensorPath(self):
         "Returns the path to the sensor directory"
-        if self.useCache:
+        if not self.useCache:
             return self.__owfsRoot + "uncached/" + self.__sensorPath
         else:
             return self.__owfsRoot + self.__sensorPath
