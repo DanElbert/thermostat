@@ -1,10 +1,11 @@
+import Config
 from owfs import Sensors
 import unittest
 
 class owSensorTestFixture(unittest.TestCase):
     
     def setUp(self):
-        self.owSettings = Sensors.OwSettings("/home/dan/development/thermostat/tests/fakeOwfsMount/")
+        self.owSettings = Sensors.OwSettings(Config.OWFS_MOUNT_ROOT)
     
     def testOwSensor(self):
         sensor = Sensors.OwSensor(self.owSettings, "01.1234567890AB")
