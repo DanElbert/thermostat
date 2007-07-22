@@ -7,7 +7,7 @@ class State(object):
     def Entry(self):
         raise RuntimeError, "Abstract State cannot be run."
     
-    def EnsureState(self):
+    def UpdateState(self):
         return self
     
     def Exit(self):
@@ -22,16 +22,16 @@ class Idle(State):
         self.IO.deactivateHeater()
         self.IO.deactivateCooler()
         
-    def EnsureState(self):
+    def UpdateState(self):
         
         status = self.IO.getTemperatureStatus()
         
-        if status == thermostatIO.IO.TEMP_GOOD:
-            return self
-        elif status == thermostatIO.IO.TEMP_HIGH:
-            return Cooling()
-        elif status == thermostatIO.IO.TEMP_LOW:
-            return Heating()
+        if status == thermostatIO.IO.TEMP_HIGH and self.IO.hasCoolerSwitchDeltaPassed():
+            return Cooling(self.IO)
+        elif status == thermostatIO.IO.TEMP_LOW and self.IO.hasHeaterSwitchDeltaPassed():
+            return Heating(self.IO)
+        
+        return self
         
     def getName(self):
         return "Idle"
@@ -42,13 +42,13 @@ class Heating(State):
         self.IO.deactivateCooler()
         self.IO.activateHeater()
     
-    def EnsureState(self):
+    def UpdateState(self):
         status = self.IO.getTemperatureStatus()
         
-        if status == thermostatIO.IO.TEMP_GOOD or status == thermostatIO.IO.TEMP_HIGH:
-            return Idle()
-        elif status == thermostatIO.IO.TEMP_LOW:
-            return self
+        if (status == thermostatIO.IO.TEMP_GOOD_HIGH or status == thermostatIO.IO.TEMP_HIGH) and self.IO.hasHeaterSwitchDeltaPassed():
+            return Idle(self.IO)
+        
+        return self
         
     def getName(self):
         return "Heating"
@@ -59,13 +59,13 @@ class Cooling(State):
         self.IO.activateCooler()
         self.IO.deactivateHeater()
     
-    def EnsureState(self):
+    def UpdateState(self):
         status = self.IO.getTemperatureStatus()
         
-        if status == thermostatIO.IO.TEMP_GOOD or status == thermostatIO.IO.TEMP_LOW:
-            return Idle()
-        elif status == thermostatIO.IO.TEMP_HIGH:
-            return self
+        if (status == thermostatIO.IO.TEMP_GOOD_LOW or status == thermostatIO.IO.TEMP_LOW) and self.IO.hasCoolerSwitchDeltaPassed():
+            return Idle(self.IO)
+        
+        return self
         
     def getName(self):
         return "Cooling"

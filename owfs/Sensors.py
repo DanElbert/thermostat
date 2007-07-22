@@ -1,7 +1,7 @@
 import os
 import re
 
-class OwSettings:
+class OwSettings(object):
     """
     Class to wrap some default parameters for accessing the 1 wire file system
     owfsRoot: points at the rool of the owfs mount point

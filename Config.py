@@ -17,4 +17,8 @@ HEATER_RELAY = config.get("Sensors", "heaterswitchid")
 OWFS_MOUNT_ROOT = config.get("Sensors", "owfsmount")
 
 TARGET_TEMPERATURE = config.get("Thermostat", "targettemp")
+MAX_TEMPERATURE_DELTA = config.get("Thermostat", "maxtemperaturedelta")
 SWITCH_DELAY = config.get("Thermostat", "switchdelay")
+STATE_MANAGER_DELAY = config.get("Thermostat", "statemanagerdelay")
+
+SIMPLE_LOGGER_PATH = config.get("Logging", "SimpleLoggerFile")

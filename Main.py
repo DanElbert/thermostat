@@ -1,23 +1,16 @@
 import time
 import Config
-from owfs import Sensors
+import Loggers
+from stateMachine import Thermostat
+from stateMachine import States
+import thermostatIO
 
-settings = Sensors.OwSettings(Config.OWFS_MOUNT_ROOT)
-settings.useCache = False
-
-temp_sensor = Sensors.TemperatureSensor(settings, Config.AIR_TEMP_SENSOR)
-switch_sensor = Sensors.RelaySensor(settings, Config.COOLER_RELAY)
 
 print "Starting..."
 
-while True:
-    
-    print "Current Temperature: " + str(temp_sensor.temperature)
-    print "Is Switch Open     : " + str(switch_sensor.isOpen)
-    
-    if temp_sensor.temperature > float(Config.TARGET_TEMPERATURE):
-        switch_sensor.open()
-    else:
-        switch_sensor.close()
-        
-    time.sleep(2)
+logger = Loggers.SimplisticLogger()
+io = thermostatIO.IO()
+idle = States.Idle(io)
+machine = Thermostat.StateManager(idle, Config.STATE_MANAGER_DELAY, logger)
+
+machine.run()

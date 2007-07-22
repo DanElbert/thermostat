@@ -1,38 +1,54 @@
 from __future__ import with_statement
 import time
-import threading
+import thread
 
 class StateManager(object):
     
-    __managerLock = threadingLock()
-    
-    def __init__(self, startingState, loopDelay):
+    def __init__(self, startingState, loopDelay, logger = None):
+        
+        self.__managerLock = thread.allocate_lock()
+        self.__currentState = None
+        
         self.currentState = startingState
-        self.loopDelay = loopDelay
+        self.loopDelay = float(loopDelay)
+        self.stop = False
+        self.logger = logger
         
     def __setcurrentState(self, value):
-        with __managerLock:
-            if self._currentState != value:
+        with self.__managerLock:
+            if self.__currentState != value:
                 self.__currentState = value
                 self.__currentState.Entry()
     
     def __getcurrentState(self):
-        with __managerLock:
+        with self.__managerLock:
             return self.__currentState
     
     currentState = property(__getcurrentState, __setcurrentState)
     
-    def __setisRunning(self, value):
-        with __managerLock:
-            self.__isRunning = value
+    def __setstop(self, value):
+        with self.__managerLock:
+            self.__stop = value
             
-    def __getisRunning(self):
-        with __managerLock:
-            return self.__isRunning
+    def __getstop(self):
+        with self.__managerLock:
+            return self.__stop
         
-    isRunning = property(__getisRunning, __setisRunning)
+    stop = property(__getstop, __setstop)
+    
+    def __setlogger(self, value):
+        with self.__managerLock:
+            self.__logger = value
+            
+    def __getlogger(self):
+        with self.__managerLock:
+            return self.__logger
+        
+    logger = property(__getlogger, __setlogger)
     
     def run(self):
-        while self.isRunning:
-            self.currentState = self.currentState.EnsureState()
+        while not self.stop:
+            if self.logger != None:
+                self.logger.log(self.currentState)
+            self.currentState = self.currentState.UpdateState()
             time.sleep(self.loopDelay)
