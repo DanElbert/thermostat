@@ -32,13 +32,13 @@ class owSensorTestFixture(unittest.TestCase):
         self.assertEqual(24.432, tempReading)
         
     def testRelaySensor(self):
-        file = open(self.owSettings.owfsRoot + "01.1234567890AB/PIO", "w")
+        file = open(self.owSettings.owfsRoot + "04.4567890AB123/PIO", "w")
         file.write("0")
         file.close()
-        relay = Sensors.RelaySensor(self.owSettings, "01.1234567890AB")
+        relay = Sensors.RelaySensor(self.owSettings, "04.4567890AB123")
         self.assertEqual(False, relay.isOpen)
         
-        file = open(self.owSettings.owfsRoot + "01.1234567890AB/PIO", "w")
+        file = open(self.owSettings.owfsRoot + "04.4567890AB123/PIO", "w")
         file.write("1")
         file.close()
         
@@ -48,7 +48,7 @@ class owSensorTestFixture(unittest.TestCase):
         relay.close()
         self.assertEqual(False, relay.isOpen)
         
-        file = open(self.owSettings.owfsRoot + "01.1234567890AB/PIO", "r")
+        file = open(self.owSettings.owfsRoot + "04.4567890AB123/PIO", "r")
         currVal = file.read()
         file.close()
         self.assertEqual("0", currVal)

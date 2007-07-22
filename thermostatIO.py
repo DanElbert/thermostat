@@ -1,7 +1,6 @@
+import datetime
 from owfs import Sensors
 import Config
-import sys
-import io
 
 class IO:
     
@@ -9,14 +8,19 @@ class IO:
     TEMP_GOOD = 1
     TEMP_LOW = 2
     
-    def __init__(self):
-        settings = Sensors.OwSettings(Config.OWFS_MOUNT_ROOT, False)
+    def __init__(self, useCache = False):
+        settings = Sensors.OwSettings(Config.OWFS_MOUNT_ROOT, useCache)
         
         self.airTemperatureSensor = Sensors.TemperatureSensor(settings, Config.AIR_TEMP_SENSOR)
         self.ambientTemperatureSensor = Sensors.TemperatureSensor(settings, Config.AMBIENT_TEMPT_SENSOR)
         self.liquidTemperatureSensor = Sensors.TemperatureSensor(settings, Config.LIQUID_TEMP_SENSOR)
+        
         self.coolerSwitch = Sensors.RelaySensor(settings, Config.COOLER_RELAY)
         self.heaterSwitch = Sensors.RelaySensor(settings, Config.HEATER_RELAY)
+        
+        self.switchDelay = datetime.timedelta(seconds = float(Config.SWITCH_DELAY))
+        self.lastHeaterSwitch = datetime.datetime.min
+        self.lastCoolerSwitch = datetime.datetime.min
         
     def getAirTemperature(self):
         return self.airTemperatureSensor.temperature
@@ -34,17 +38,34 @@ class IO:
         return self.heaterSwitch.isOpen
     
     def activateHeater(self):
-        self.heaterSwitch.open()
+        if not self.heaterSwitch.isOpen:
+            self.lastHeaterSwitch = datetime.datetime.now()
+            self.heaterSwitch.open()
         
     def deactivateHeater(self):
-        self.heaterSwitch.close()
+        if self.heaterSwitch.isOpen:
+            self.lastHeaterSwitch = datetime.datetime.now()
+            self.heaterSwitch.close()
         
     def activateCooler(self):
-        self.coolerSwitch.open()
+        if not self.coolerSwitch.isOpen():
+            self.lastCoolerSwitch = datetime.datetime.now()
+            self.coolerSwitch.open()
         
     def deactivateCooler(self):
-        self.coolerSwitch.close()
+        if self.coolerSwitch.isOpen():
+            self.lastCoolerSwitch = datetime.datetime.now()
+            self.coolerSwitch.close()
         
     def getTemperatureStatus(self):
         return TEMP_GOOD
     
+    def hasCoolerSwitchDeltaPassed(self):
+        if (datetime.datetime.now() - self.lastCoolerSwitch) < self.switchDelay:
+            return False
+        return True
+    
+    def hasHeaterSwitchDeltaPassed(self):
+        if (datetime.datetime.now() - self.lastHeaterSwitch) < self.switchDelay:
+            return False
+        return True

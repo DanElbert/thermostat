@@ -87,7 +87,7 @@ class OwSensor(object):
                 
             return value
         else:
-            raise RuntimeError, "No such attribute %s in Sensor %s" % name, self.getFullSensorPath()
+            raise RuntimeError, "No such attribute " + name + " in Sensor " + self.__getFullSensorPath()
         
     def __getaddress(self):
         "address property getter"
