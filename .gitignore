@@ -14,3 +14,12 @@
 # Ignore all logfiles and tempfiles.
 /log/*.log
 /tmp
+
+# Ignore compiled assets
+/public/assets/*
+
+# Ignore rubymine project files
+/.idea/*
+
+# Ignore DS_Store files
+.DS_Store
