@@ -1,17 +1,18 @@
 module Thermostat
   class StateMachine
 
-    def initialize(starting_state, loop_delay)
-      @loop_delay = loop_delay
-      @logger = Logger.new
+    def initialize(starting_state, config)
+      @config = config
+      @logger = Thermostat::Logger.new
       starting_state.entry
       set_state(starting_state)
     end
 
     def run
       while true
+        @config.update()
         set_state(@current_state.update_state)
-        sleep @loop_delay
+        sleep @config.state_manager_delay
       end
     end
 

@@ -9,6 +9,8 @@ module Thermostat
     TEMP_GOOD_LOW = 2
     TEMP_LOW = 3
 
+    attr_reader :config
+
     def initialize(config)
       path_info = OwfsPathInfo.new(config.owfs_mount, false)
 
@@ -20,9 +22,8 @@ module Thermostat
       @cooler_relay_sensor.turn_off
       @heater_relay_sensor.turn_off
 
-      @target_temp = config.target_temp
-      @switch_delay = config.switch_delay
-      @max_temperature_delta = config.max_temperature_delta
+      @config = config
+
       @last_cooler_switch = Time.new
       @last_heater_switch = Time.new
     end
@@ -54,7 +55,7 @@ module Thermostat
     end
 
     def cooler_switch_delay_passed?
-      (Time.new - @last_cooler_switch) >= @switch_delay
+      (Time.new - @last_cooler_switch) >= @config.switch_delay
     end
 
     def heater_on?
@@ -80,19 +81,19 @@ module Thermostat
     end
 
     def heater_switch_delay_passed?
-      (Time.new - @last_heater_switch) >= @switch_delay
+      (Time.new - @last_heater_switch) >= @config.switch_delay
     end
 
     def get_temperature_status
       temp = get_air_temperature
-      low_good = @target_temp - @max_temperature_delta
-      high_good = @target_temp + @max_temperature_delta
+      low_good = @config.target_temp - @config.max_temperature_delta
+      high_good = @config.target_temp + @config.max_temperature_delta
 
       if temp < low_good
         ThermostatIO::TEMP_LOW
       elsif temp > high_good
         ThermostatIO::TEMP_HIGH
-      elsif temp > @target_temp
+      elsif temp > @config.target_temp
         ThermostatIO::TEMP_GOOD_HIGH
       else
         ThermostatIO::TEMP_GOOD_LOW

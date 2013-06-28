@@ -1,0 +1,62 @@
+
+
+<canvas id="graph" width="800" height="400">
+</canvas>
+
+<table>
+  <thead>
+    <tr>
+      <th>Time</th>
+      <th>State</th>
+      <th>Temperature</th>
+      <th>Target</th>
+    </tr>
+  </thead>
+  <% @entries.each do |e| %>
+    <tr>
+      <td><%= e.timestamp %></td>
+      <td><%= e.state %></td>
+      <td><%= e.temperature %></td>
+      <td><%= e.target_temperature %></td>
+    </tr>
+  <% end %>
+</table>
+
+<script type="text/javascript">
+  $(document).ready(function() {
+
+      var ctx = $("#graph")[0].getContext("2d");
+
+      $.get('<%= log_entries_path %>', function(data, status, xhr) {
+          var options = {};
+          var chartData = {
+              labels:[],
+              datasets: [
+                  {
+                      fillColor : "rgba(220,220,220,0.5)",
+                      strokeColor : "rgba(220,220,220,1)",
+                      pointColor : "rgba(220,220,220,1)",
+                      pointStrokeColor : "#fff",
+                      data: []
+                  },
+                  {
+                      fillColor : "rgba(151,187,205,0.5)",
+                      strokeColor : "rgba(151,187,205,1)",
+                      pointColor : "rgba(151,187,205,1)",
+                      pointStrokeColor : "#fff",
+                      data: []
+                  }]};
+
+          for (var x = 0; x < data.length; x++) {
+            chartData.labels.push(data[x].timestamp);
+            chartData.datasets[0].data.push(data[x].temperature);
+            chartData.datasets[1].data.push(data[x].is_heating ? 1 : 0);
+          }
+
+
+
+
+          new Chart(ctx).Line(chartData, options);
+      }, 'json');
+  });
+</script>

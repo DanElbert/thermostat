@@ -1,5 +1,6 @@
 
 require 'pathname'
+require 'yaml'
 
 files = [
     'owfs_path_info',

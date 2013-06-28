@@ -1,0 +1,21 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/Fixtures.html
+
+one:
+  timestamp: 2013-06-28 14:30:08
+  state: MyString
+  temperature: 1.5
+  target_temperature: 1.5
+  max_delta: 1.5
+  switch_delay: 1
+  is_heating: false
+  is_cooling: false
+
+two:
+  timestamp: 2013-06-28 14:30:08
+  state: MyString
+  temperature: 1.5
+  target_temperature: 1.5
+  max_delta: 1.5
+  switch_delay: 1
+  is_heating: false
+  is_cooling: false
