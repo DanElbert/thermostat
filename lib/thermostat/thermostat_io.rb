@@ -14,14 +14,17 @@ module Thermostat
 
       @air_temperature_sensor = Sensors::TemperatureSensor.new(path_info, config.air_temperature_id)
       @cooler_relay_sensor = Sensors::RelaySensor.new(path_info, config.cooler_relay_id)
+      @heater_relay_sensor = Sensors::RelaySensor.new(path_info, config.heater_relay_id)
 
       # Ensure all relays start turned off
       @cooler_relay_sensor.turn_off
+      @heater_relay_sensor.turn_off
 
       @target_temp = config.target_temp
       @switch_delay = config.switch_delay
       @max_temperature_delta = config.max_temperature_delta
-      @last_cooler_switch = nil
+      @last_cooler_switch = Time.new
+      @last_heater_switch = Time.new
     end
 
     def get_air_temperature
@@ -51,7 +54,33 @@ module Thermostat
     end
 
     def cooler_switch_delay_passed?
-      @last_cooler_switch.nil? || ((Time.new - @last_cooler_switch) >= @switch_delay)
+      (Time.new - @last_cooler_switch) >= @switch_delay
+    end
+
+    def heater_on?
+      @heater_relay_sensor.on?
+    end
+
+    def activate_heater
+      unless heater_on?
+        raise "Heater cannot be activated so soon after being deactivated" unless heater_switch_delay_passed?
+
+        @heater_relay_sensor.turn_on
+        @last_heater_switch = Time.new
+      end
+    end
+
+    def deactivate_heater
+      if heater_on?
+        raise "Heater cannot be deactivated so soon after being activated" unless heater_switch_delay_passed?
+
+        @heater_relay_sensor.turn_off
+        @last_heater_switch = Time.new
+      end
+    end
+
+    def heater_switch_delay_passed?
+      (Time.new - @last_heater_switch) >= @switch_delay
     end
 
     def get_temperature_status

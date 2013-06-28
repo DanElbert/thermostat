@@ -13,7 +13,9 @@ module Thermostat
         temp = @io.get_temperature_status
 
         if temp == ThermostatIO::TEMP_HIGH && @io.cooler_switch_delay_passed?
-          Cooling.new(@io)
+          States::Cooling.new(@io)
+        elsif temp == ThermostatIO::TEMP_LOW && @io.heater_switch_delay_passed?
+          States::Heating.new(@io)
         else
           self
         end

@@ -7,7 +7,7 @@ module Thermostat
       @base_path = Pathname.new(owfs_path.to_s)
       @use_cache = use_cache
 
-      raise "owfs path should be a valid directory" unless @base_path.directory?
+      raise "owfs path [#{owfs_path}] should be a valid directory" unless @base_path.directory?
       raise "owfs path doesn't appear to be a valid owfs mount point" unless @base_path.join('uncached').directory? && @base_path.join('bus.0').directory?
     end
 
@@ -34,7 +34,7 @@ module Thermostat
 
     def get_attribute_pathname(sensor_id, attribute)
       path = get_sensor_pathname(sensor_id).join(attribute)
-      raise "Invalid Sensor Attribute [#{attribute}] for sensor [#{sensor_id}" unless path.file?
+      raise "Invalid Sensor Attribute [#{attribute}] for sensor [#{sensor_id}]" unless path.file?
       path
     end
   end

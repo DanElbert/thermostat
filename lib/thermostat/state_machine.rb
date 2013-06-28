@@ -3,6 +3,7 @@ module Thermostat
 
     def initialize(starting_state, loop_delay)
       @loop_delay = loop_delay
+      @logger = Logger.new
       starting_state.entry
       set_state(starting_state)
     end
@@ -22,6 +23,7 @@ module Thermostat
         new_state.entry
       end
 
+      @logger.log(new_state)
       @current_state = new_state
     end
   end

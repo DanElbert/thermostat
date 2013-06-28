@@ -9,8 +9,10 @@ files = [
     'sensors/temperature_sensor',
     'states/base',
     'states/cooling',
+    'states/heating',
     'states/idle',
     'thermostat_io',
+    'logger',
     'state_machine'
 ]
 

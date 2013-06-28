@@ -9,20 +9,20 @@ module Thermostat
 
       # Whether the relay is currently on
       def on?
-        get_attribute('pio').to_i == 1
+        get_attribute('PIO').to_i == 1
       end
 
       # Ensures the relay is off
       def turn_off
         if on?
-          set_attribute('pio', 0)
+          set_attribute('PIO', 0)
         end
       end
 
       # Ensures the relay is on
       def turn_on
         unless on?
-          set_attribute('pio', 1)
+          set_attribute('PIO', 1)
         end
       end
     end

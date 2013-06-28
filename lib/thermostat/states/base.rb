@@ -1,6 +1,9 @@
 module Thermostat
   module States
     class Base
+
+      attr_reader :io
+
       def initialize(io)
         @io = io
       end
