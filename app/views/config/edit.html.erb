@@ -1,0 +1,18 @@
+
+<h2>Edit Configuration</h2>
+
+<%= form_for :config, url: update_config_path, method: :post do |f| %>
+    <%= f.label :target_temp, "Target" %>
+    <%= f.text_field :target_temp %>
+
+    <%= f.label :switch_delay, "Switch Delay" %>
+    <%= f.text_field :switch_delay %>
+
+    <%= f.label :max_temperature_delta, "Max Temperature Delta" %>
+    <%= f.text_field :max_temperature_delta %>
+
+    <%= f.label :state_manager_delay, "State Manager Loop Delay" %>
+    <%= f.text_field :state_manager_delay %>
+
+    <%= f.submit("Save") %>
+<% end %>

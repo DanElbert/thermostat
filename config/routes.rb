@@ -6,6 +6,9 @@ Thermostat::Application.routes.draw do
 
   get 'log/log_entries' => 'log#log_entries', :as => :log_entries
 
+  get "config/edit" => 'config#edit', :as => :edit_config
+  post "config/update" => 'config#update', :as => :update_config
+
   # You can have the root of your site routed with "root"
   # root 'welcome#index'
 
