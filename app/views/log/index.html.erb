@@ -23,51 +23,63 @@
 </table>
 
 <script type="text/javascript">
-  $(document).ready(function() {
+    function windowResize() {
+        redrawGraph();
+    }
 
-      var $canvas = $('#graph');
-      $canvas.attr('width', $canvas.parent().width());
-      var ctx = $canvas[0].getContext("2d");
+    function redrawGraph() {
+        var $canvas = $('#graph');
+        $canvas.attr('width', $canvas.parent().width());
+        var ctx = $canvas[0].getContext("2d");
 
 
-      $.get('<%= log_entries_path %>', function(data, status, xhr) {
-          var options = {};
-          var chartData = {
-              labels:[],
-              datasets: [
-                  {
-                      fillColor : "rgba(220,220,220,0.5)",
-                      strokeColor : "rgba(220,220,220,1)",
-                      pointColor : "rgba(220,220,220,1)",
-                      pointStrokeColor : "#fff",
-                      data: []
-                  },
-                  {
-                      fillColor : "rgba(151,187,205,0.5)",
-                      strokeColor : "rgba(151,187,205,1)",
-                      pointColor : "rgba(151,187,205,1)",
-                      pointStrokeColor : "#fff",
-                      data: []
-                  }]};
+        $.get('<%= log_entries_path %>', function(data, status, xhr) {
+            var options = {};
+            var chartData = {
+                labels:[],
+                datasets: [
+                    {
+                        fillColor : "rgba(220,220,220,0.5)",
+                        strokeColor : "rgba(220,220,220,1)",
+                        pointColor : "rgba(220,220,220,1)",
+                        pointStrokeColor : "#fff",
+                        data: []
+                    },
+                    {
+                        fillColor : "rgba(255,100,100,0.5)",
+                        strokeColor : "rgba(255,100,100,1)",
+                        pointColor : "rgba(255,100,100,1)",
+                        pointStrokeColor : "#fff",
+                        data: []
+                    }]};
 
-          var count = 0;
+            var count = 0;
 
-          for (var x = 0; x < data.length; x++) {
-            if (count % 1 == 0) {
-                chartData.labels.push(new Date(data[x].timestamp).toTimeString().replace(/.*(\d{2}:\d{2}:\d{2}).*/, "$1"));
-            } else {
-                chartData.labels.push('');
+            for (var x = 0; x < data.length; x++) {
+                if (count % 1 == 0) {
+                    chartData.labels.push(new Date(data[x].timestamp).toTimeString().replace(/.*(\d{2}:\d{2}:\d{2}).*/, "$1"));
+                } else {
+                    chartData.labels.push('');
+                }
+                count++;
+
+                chartData.datasets[0].data.push(data[x].temperature);
+                chartData.datasets[1].data.push(data[x].is_heating ? 10 : 0);
             }
-            count++;
-
-            chartData.datasets[0].data.push(data[x].temperature);
-            chartData.datasets[1].data.push(data[x].is_heating ? 10 : 0);
-          }
 
 
 
 
-          new Chart(ctx).Line(chartData, options);
-      }, 'json');
+            new Chart(ctx).Line(chartData, options);
+        }, 'json');
+    }
+
+  $(document).ready(function() {
+      $(window).resize(function() {
+          windowResize();
+      });
+
+      redrawGraph();
+
   });
 </script>

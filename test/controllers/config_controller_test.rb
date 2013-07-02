@@ -7,7 +7,7 @@ class ConfigControllerTest < ActionController::TestCase
   end
 
   test "should get update" do
-    get :update
+    post :update
     assert_response :success
   end
 

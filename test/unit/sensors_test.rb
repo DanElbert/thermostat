@@ -25,13 +25,13 @@ class SensorTest < ActiveSupport::TestCase
 
     assert_equal @config.cooler_relay_id + "FF", sensor.address
     assert_equal @config.cooler_relay_id, sensor.id
-    assert sensor.on?
-
-    sensor.turn_off
     refute sensor.on?
 
     sensor.turn_on
     assert sensor.on?
+
+    sensor.turn_off
+    refute sensor.on?
 
     @owfs_path.use_cache = true
     sensor = Thermostat::Sensors::TemperatureSensor.new(@owfs_path, @config.cooler_relay_id)

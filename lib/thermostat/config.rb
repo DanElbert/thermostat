@@ -2,17 +2,25 @@ module Thermostat
   class Config
 
     CONFIG_ATTRIBUTES = [
-        :owfs_mount,
-        :air_temperature_id,
-        :cooler_relay_id,
-        :heater_relay_id,
-        :target_temp,
-        :switch_delay,
-        :max_temperature_delta,
-        :state_manager_delay
+        {name: :owfs_mount, type: :string },
+        {name: :air_temperature_id, type: :string },
+        {name: :cooler_relay_id, type: :string },
+        {name: :heater_relay_id, type: :string },
+        {name: :target_temp, type: :float },
+        {name: :switch_delay, type: :integer },
+        {name: :max_temperature_delta, type: :float },
+        {name: :state_manager_delay, type: :integer }
     ]
 
-    CONFIG_ATTRIBUTES.each { |a| attr_accessor a }
+    CONFIG_ATTRIBUTES.each do |a|
+      attr_reader a[:name]
+
+      define_method "#{a[:name]}=".to_sym do |value|
+        value = value.to_f if a[:type] == :float
+        value = value.to_i if a[:type] == :integer
+        instance_variable_set("@#{a[:name]}", value)
+      end
+    end
 
     def self.load_from_file(file)
       config = self.new()
@@ -46,7 +54,7 @@ module Thermostat
 
       yml = YAML.load_file(file)
 
-      CONFIG_ATTRIBUTES.map { |a| a.to_s }.each do |a|
+      CONFIG_ATTRIBUTES.map { |a| a[:name].to_s }.each do |a|
         if yml.has_key? a
           self.send("#{a}=", yml[a])
         end
@@ -63,7 +71,7 @@ module Thermostat
       yml = {}
 
       CONFIG_ATTRIBUTES.each do |a|
-        yml[a] = self.send(a);
+        yml[a[:name].to_s] = self.send(a[:name])
       end
 
       File.open(file, 'w') do |f|

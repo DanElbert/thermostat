@@ -25,7 +25,7 @@ class ThermostatConfig
       @real_config.switch_delay = switch_delay
       @real_config.max_temperature_delta = max_temperature_delta
       @real_config.state_manager_delay = state_manager_delay
-      @real_config.update()
+      @real_config.save()
       true
     else
       false

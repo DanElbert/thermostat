@@ -1,17 +1,9 @@
-
+---
 owfs_mount: /mnt/1wire/
 air_temperature_id: 10.382C4D010800
 cooler_relay_id: 05.7C0A32000000
 heater_relay_id: 05.EF0932000000
-
-# In degrees C
 target_temp: 35.0
-
-# In Seconds
 switch_delay: 15
-
-# In degrees C
-max_temperature_delta: 2
-
-# In seconds
+max_temperature_delta: 2.0
 state_manager_delay: 15

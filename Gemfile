@@ -5,6 +5,7 @@ gem 'rails', '4.0.0'
 gem 'sqlite3'
 gem 'jquery-rails'
 gem 'skeleton-rails'
+gem 'thin'
 
 # Turbolinks makes following links in your web application faster. Read more: https://github.com/rails/turbolinks
 gem 'turbolinks'
