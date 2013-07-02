@@ -1,10 +1,11 @@
-require File.expand_path('../test_helper', __FILE__)
+require File.expand_path('../../test_helper', __FILE__)
 
-class StatesTest < MiniTest::Unit::TestCase
+class StatesTest < ActiveSupport::TestCase
   def setup
     create_fake_owfs_mount
     setup_path_info_and_config
     @io = Thermostat::ThermostatIO.new(@config)
+    sleep 0.3 #Ensure initial switch delay has passed
   end
 
   def test_idle_to_cool

@@ -1,6 +1,8 @@
 
 <h2>Edit Configuration</h2>
 
+<%= render partial: 'shared/error_list', locals: {model: @config} %>
+
 <%= form_for :config, url: update_config_path, method: :post do |f| %>
     <%= f.label :target_temp, "Target" %>
     <%= f.text_field :target_temp %>

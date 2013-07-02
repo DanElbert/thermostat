@@ -4,9 +4,10 @@ class ConfigController < ApplicationController
   end
 
   def update
+
     @config = ThermostatConfig.new(params[:config])
     if @config.save
-      return redirect_to root_path, notice: 'Configuration Updated'
+      redirect_to root_path, notice: 'Configuration Updated'
     else
       render :edit
     end

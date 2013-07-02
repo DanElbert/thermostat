@@ -28,7 +28,7 @@ module Thermostat
         path = @base_path.join('uncached', sensor_id)
       end
 
-      raise "Invalid Sensor id: #{sensor_id}" unless path.directory?
+      raise "Invalid Sensor id: #{sensor_id} in \"#{@base_path}\"" unless path.directory?
       path
     end
 

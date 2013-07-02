@@ -1,7 +1,9 @@
 require File.expand_path('../../test_helper', __FILE__)
 
 class LogEntryTest < ActiveSupport::TestCase
-  # test "the truth" do
-  #   assert true
-  # end
+
+  test "load from file" do
+    c = reset_thermostat_config_file
+  end
+
 end

@@ -1,6 +1,7 @@
 class RangeValidator < ActiveModel::EachValidator
   def validate_each(record, attribute, value)
     return unless value
+    value = value.to_f
 
     if options[:min] && value < options[:min]
       record.errors[attribute] << (options[:message] || "is too low")

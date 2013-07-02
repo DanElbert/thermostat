@@ -1,6 +1,6 @@
-require File.expand_path('../test_helper', __FILE__)
+require File.expand_path('../../test_helper', __FILE__)
 
-class SensorTest < MiniTest::Unit::TestCase
+class SensorTest < ActiveSupport::TestCase
   def setup
     create_fake_owfs_mount
     setup_path_info_and_config

@@ -19,7 +19,7 @@ module Thermostat
       config.update(file)
     end
 
-    def self.load
+    def self.load_default
       config = Config.new
       config.owfs_mount = '/mnt/1wire/'
       config.air_temperature_id = '10.382C4D010800'
@@ -42,7 +42,6 @@ module Thermostat
     end
 
     def update(file = nil)
-
       file = @last_loaded_from unless file
 
       yml = YAML.load_file(file)
@@ -58,7 +57,9 @@ module Thermostat
       self
     end
 
-    def save(file)
+    def save(file = nil)
+      file = @last_loaded_from unless file
+
       yml = {}
 
       CONFIG_ATTRIBUTES.each do |a|
